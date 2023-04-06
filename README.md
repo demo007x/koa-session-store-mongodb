@@ -1,18 +1,19 @@
-koa session store in mongodb
+## koa session store in mongodb
 
 koa实现session保存mongodb案例
 
 由于此模块依赖 koa-session, 首先安装 koa-session
 
-npm install koa-session
+> npm install koa-session
 
 在启动文件中加载模块
-
+```
 const session = require('koa-session');
 const SessionStore = require('./sessionStore'); //假设文件sessionStore.js 文件保存在 core的根目录
-
+```
 配置session
 
+```
 app.keys = ['some secret hurr'];
 // session 配置信息
 const CONFIG = {
@@ -23,9 +24,11 @@ const CONFIG = {
     signed: true, 
     rolling: false,
 };
-
+```
+```
 // 以中间件的方式使用session 
 app.use(session(CONFIG, app));
+```
 
 设置session保存mongodb中
 
@@ -33,10 +36,11 @@ app.use(session(CONFIG, app));
 
 在koa-session的说明中， 如果要吧session信息保存在数据库中， 可以自己实现： 
 
-https://github.com/koajs/session#external-session-stores
+`https://github.com/koajs/session#external-session-stores`
 
 在CONFIG中增加store参数：
 
+```
 const CONFIG = {
         key: 'koa:sess',
         maxAge: 86400000,
@@ -51,13 +55,13 @@ const CONFIG = {
             name: 'session' // 保存session的表名称
         })
     };
-
+```
 测试并使用session
 
 你可以在你想要用session的地方获取到session
 
 demo:
-
+```
 app.use(async (ctx, next) => {
     // 获取session对象
     const session = ctx.session;
@@ -70,10 +74,11 @@ app.use(async (ctx, next) => {
     }
     next();
 })
-
+```
 接下来你查看mongodb数据库中是否以保存了你想要的值
 sessionStore.js 文件源码, 你可以复制代码到你项目的任何目录， 只要保存引用正确即可
 
+```
 const schema = {
     _id: String,
     data: Object,
@@ -123,3 +128,4 @@ export default class MongooseStore {
 	}
 }
       
+```
